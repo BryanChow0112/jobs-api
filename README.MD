@@ -16,8 +16,6 @@ A RESTful API for managing job postings. Built with Node.js, Express and secured
 
 ## Features
 
-## Features
-
 -   **User Authentication:**
     -   Secure user registration and login using JWT (JSON Web Tokens).
     -   Passwords are encrypted using bcryptjs before storage.
