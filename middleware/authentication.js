@@ -2,17 +2,20 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { UnauthenticatedError } = require("../errors");
 
+// Middleware to authenticate user
 const auth = async (req, res, next) => {
-  // check header
+  // Get the authorization header from the request
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     throw new UnauthenticatedError("Authentication invalid");
   }
+  // Extract the token from the header (Bearer <token>)
   const token = authHeader.split(" ")[1];
 
   try {
+    // Verify the token
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // attach the user to the job routes
+    // Attach the user to the job routes
     req.user = { userId: payload.userId, name: payload.name };
     next();
   } catch (error) {

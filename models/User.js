@@ -25,11 +25,13 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
+// Mongoose middleware:  Before saving the user, hash the password
 UserSchema.pre("save", async function () {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  const salt = await bcrypt.genSalt(10);  // Generate a salt with 10 rounds
+  this.password = await bcrypt.hash(this.password, salt);  // Hash the password with the salt
 });
 
+// Instance method to create a JWT token for the user
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
     { userId: this._id, name: this.name },
@@ -40,6 +42,7 @@ UserSchema.methods.createJWT = function () {
   );
 };
 
+// Instance method to compare a provided password with the hashed password in the DB
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
